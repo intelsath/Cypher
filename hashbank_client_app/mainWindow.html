@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Megahash Corp.</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="stylesheets/main.css">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="node_modules/jquery-confirm/css/jquery-confirm.css">
+
+	<script src="node_modules/showcaser/dist/showcaser.min.js"></script>
+	<script src="node_modules/qrcode-generator/qrcode.js"></script>
+	<script src="node_modules/jquery/dist/jquery.js"></script>
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="node_modules/chart.js/dist/Chart.js"></script>
+	<script src="js/Transactions.js"></script>
+	<script src="js/Cryptocurrency.js"></script>
+	<script src="js/myChart.js"></script>
+	<script src="node_modules/jquery-confirm/dist/jquery-confirm.min.js"></script>
+
+	<style>
+		.ad {
+			position: absolute;
+			width: 300px;
+			height: 250px;
+			border: 1px solid #ddd;
+			left: 50%;
+			transform: translateX(-50%);
+			top: 250px;
+			z-index: 10;
+		}
+		.ad .close {
+			position: absolute;
+			font-family: 'ionicons';
+			width: 20px;
+			height: 20px;
+			color: #fff;
+			background-color: #999;
+			font-size: 20px;
+			left: -20px;
+			top: -1px;
+			display: table-cell;
+			vertical-align: middle;
+			cursor: pointer;
+			text-align: center;
+		}
+	</style>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			document.getElementById("side-nav").style.display = "none";
+			$('nav ul li').click(function(e){
+				// If this isn't already active
+				if (!$(this).hasClass("active")) {
+					// Remove the class from anything that is active
+					$("li.active").removeClass("active");
+					// And make this active
+					$(this).addClass("active");
+				}
+				// prevent default behaviour of the anchor tag
+				e.preventDefault();
+				// save the data attribute for the anchor tag that was clicked
+				var page = $(this).data('page');				
+				// find the current 'page' element that doesn't have the class .hide -- this is a css selector
+				$("#pages .page:not('.hide')").stop().fadeOut('fast', function() {
+
+					// adds .hide to the element that was showing after it has faded out
+					$(this).addClass('hide');
+					// remove hidden class from element with the same data attribute as the anchor tag
+					$('#pages .page[data-page="'+page+'"]').fadeIn('slow').removeClass('hide');
+				});
+			});
+			$('#settings-enable_tutorial-button').click(function(e){
+				e.preventDefault();
+				var page = $(this).data('page');
+				$("li.active").removeClass("active");
+				$('#portfolio-side_nav').addClass('active');
+				$("#pages .page:not('.hide')").stop().fadeOut('fast', function() {
+					$(this).addClass('hide');
+					$('#pages .page[data-page="'+page+'"]').fadeIn('slow').removeClass('hide');
+				});
+			});
+		});
+		$(function () {
+			$('.close').click(function () {
+				$('.ad').css('display', 'none');
+			})
+		});
+		$(function () {
+			$('.nav-trigger').click(function () {
+				$('.side-nav').toggleClass('visible');
+			});
+		});
+	</script>
+</head>
+
+<body class="bodyClass hide">
+	<div class="side-nav" id="side-nav">
+		<div class="logo">
+			<img src="images/icon.svg">
+			<span>MEGAHASH</span>
+		</div>
+		<nav>
+			<ul id="menu">
+				<li data-page="portfolio" id="portfolio-side_nav" class="active">
+					<a href="#">
+						<span>
+							<i class="fa fa-bar-chart"></i>
+						</span>
+						<span id="portfolio-menu-span"></span>
+					</a>
+				</li>
+				<li data-page="wallet" onclick="walletTutorial()" id="wallet-side_nav">
+					<a href="#">
+						<span>
+							<i class="fa fa-briefcase"></i>
+						</span>
+						<span id="wallet-menu-span"></span>
+					</a>
+				</li>
+				<li data-page="contacts" onclick="loadContacts()" id="contacts-side_nav">
+					<a href="#">
+						<span>
+							<i class="fa fa-book"></i>
+						</span>
+						<span id="contacts-menu-span"></span>
+					</a>
+				</li>
+				<li data-page="transactions" onclick="loadTransactions()" id="transactions-side_nav">
+					<a href="#">
+					  <span>
+						<i class="fa fa-exchange"></i>
+					  </span>
+					  <span id="transactions-menu-span"></span>
+					</a>
+				</li>
+				<li id="change-wallet_menu" data-page="change-wallet" onclick="changeWallet()">
+					<a href="#">
+						<span>
+							<i class="fa fa-sign-out"></i>
+						</span>
+						<span id="change-wallet-menu-span"></span>
+					</a>
+				</li>
+				<li id="settings_menu" data-page="settings" onclick="settingsTutorial()">
+					<a href="#">
+						<span>
+							<i class="fa fa-cog"></i>
+						</span>
+						<span id="settings-menu-span"></span>
+					</a>
+				</li>
+				<li data-page="help" id="help-side_nav" onclick="helpTutorial()">
+					<a href="#">
+						<span>
+							<i class="fa fa-question-circle"></i>
+						</span>
+						<span id="help-menu-span"></span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div id="pages" class="main-content">
+		
+		<div id="change-wallet" class="page change-wallet-page-style" style="height: 85vh; margin-left: 20px;" data-page="change-wallet">
+			<div style="display: flex;">
+				<div style="margin-top: -30px; margin-left: auto; margin-right: auto; width: fit-content; display: flex">
+					<img src="images/icon.svg" width="150" height="150" style="float:left;">
+					<h1 style="margin-top: auto; margin-bottom: auto" id="home-title"></h1>
+				</div>
+			</div>
+			
+			<div id="wallet_accordion" class="wallet-scroll">
+				<div class="wallet_card" id="nfc_wallets" >
+					<div id="nfc_wallet_header" class="wallet_card-header row" style="border-bottom: 0.5px solid white">
+						<h4 class="card-link col-sm-10 col-xl-11 align-self-center" id="nfc_wallet_text" data-toggle="collapse" href="#collapseNfcWallet"></h4>
+						<button id="home-add-nfc_wallet-btn" class="btn col-sm-2 col-xl-1" onclick="createWallet(1)" style="background-color: transparent; border: none !important; font-size: 40px; color: white"> 
+							<i id="add-nfc_wallet-btn" class="fa fa-plus-circle"></i>
+						</button>
+					</div>
+					<div id="collapseNfcWallet" class="collapse show">
+						<div class="wallet_card-body row wallet-card-scroll" id="client_wallets_nfc">
+							
+						</div>
+					</div>	
+				</div>
+				<div class="wallet_card" id="device_wallets">
+					<div id="device_wallet_header" class="wallet_card-header row" style="border-bottom: 0.5px solid white">
+						<h4 class="card-link col-sm-10 col-xl-11 align-self-center" id="device_wallet_text" data-toggle="collapse" href="#collapseDeviceWallet"></h4>
+						<button id="home-add-device_wallet-btn" class="btn col-sm-2 col-xl-1" onclick="createWallet(2)" style="background-color: transparent; border: none !important; font-size: 40px; color: white"> 
+							<i id="add-device_wallet-btn" class="fa fa-plus-circle"></i>
+						</button>
+					</div>
+					<div id="collapseDeviceWallet" class="collapse show">
+						<div class="wallet_card-body row wallet-card-scroll" id="client_wallets_device">
+							
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+		<div id="portfolio" class="page hide" data-page="portfolio">
+			<div class="outer">
+				<div class="middle">
+					<div class="currencyChart" id="currencyChart">
+						<canvas id="mycanvas" style="width: 350px; height: 235px;"></canvas>
+					</div>	
+				</div>
+			</div>
+			<div class="portfolioContent" id="portfolioContent">
+				<div class="cryptoContainer portfolioScroll" id="cryptoContent">
+					<div id="images" class="images"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="wallet" class="page hide" data-page="wallet">
+			<div id="wallet-container" class="wallet row align-items-center">
+			</div>
+
+			<!--Wallet modal-->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="wallet-modal">
+				<div class="modal-dialog">
+					<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="wallet-modal-content">
+						<div class="modal-header">
+							<img id="wallet-modal-image" width="50" height="50">
+							<h4 class="modal-title" id="wallet-modal-title" style="color:white; margin-left: 15px;"></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<div class="form-group row">
+								<label id="wallet-modal-label-address" style="color:white;" class="col-2 col-form-label"></label>
+								<div class="col-8 input">
+									<input id="wallet-modal-input-address" class="form-control" type="text">
+								</div>
+								<div class="col-2">
+									<button type="button" class="btn btn-success" id="wallet-modal-receive-button-selectcontact" data-toggle="modal" data-target="#wallet-modal-add-contact-address">+</button>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label id="wallet-modal-label-amount" style="color:white;" class="col-2 col-form-label"></label>
+								<div class="col-4 input">
+									<input class="form-control" oninput="calculateAmount(event)" type="number" id="wallet-modal-input-amount" placeholder="0.00">
+								</div>
+								<label style="color:white;" class="col-1 col-form-label"> = </label>
+								<label id="wallet-modal-label-amount-total" style="color:white;" class="col-4 col-form-label"> 0 USD </label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="wallet-modal-button-receive" type="button" class="btn mr-auto wallet-receive-btn" data-dismiss="modal"></button>
+							<button id="wallet-modal-button-send" type="button" class="btn wallet-send-btn" onclick="prepareTx()"></button>
+							<button id="wallet-modal-button-close" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--WALLET MODAL CONFIRM FEE-->
+
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.9);" id="wallet-modal-confirm-fee">
+				<div class="modal-dialog">
+					<div class="modal-content" id="wallet-modal-confirm-fee-content" style="background-color: rgba(0,0,0,0.9);">
+						<div class="modal-header wallet-modal-header">
+							<img id="wallet-modal-confirm-fee-image" width="50" height="50">
+							<h4 class="modal-title" id="wallet-modal-confirm-fee-title" style="color:white; margin-left: 15px;"></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body wallet-modal-body">
+							<div style="color: white">
+								<p>
+									<span id="wallet-modal-confirm-subtotal-text"></span>
+									<span id="wallet-modal-confirm-subtotal"></span>.<br> 
+									<span id="wallet-modal-confirm-total-text"></span>
+									<span id="wallet-modal-confirm-total"></span>
+								</p>
+							</div>
+							<div id="slider" class="form-group row" style="margin-top: 20px;">
+								<label id="wallet-modal-label-fee" style="color:white; text-align: right" class="col-2 col-form-label"></label>
+								<div class="col-4" style="display: flex">
+									<input style="margin: auto auto" type="range" min="0.00" max="1" step="0.001" value="0.00" class="slider" id="wallet-modal-range-fee">
+								</div>
+								<label style="color:white;" class="col-1 col-form-label"> = </label>
+								<input id="wallet-modal-confirm-input-fee" type="number" disabled="true" placeholder="0.00" style="background-color: transparent; color: white;" class="col-3 form-control"/>
+								<label class="col-1 col-form-label white-text"> USD </label> 
+								<!--button class="col-1 btn" style="color: white; background-color: transparent" data-toggle="tooltip" data-placement="bottom" title="How much fee?">
+									<i class="fa fa-question-circle"></i>
+								</button-->
+							</div>
+						</div>
+						<div class="modal-footer wallet-btn-footer">
+							<button id="wallet-modal-confirm-btn-confirm" class="btn btn-success"> </button>
+							<button id="wallet-modal-confirm-btn-close" class="btn btn-danger" data-dismiss="modal"> </button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Wallet modal receive-->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="wallet-modal-receive">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" id="wallet-modal-receive-content" style="background-color: rgba(0,0,0,0.9);">
+						<div class="modal-header wallet-modal-receive-header">
+							<img id="wallet-modal-receive-image" width="50" height="50">
+							<h4 class="modal-title" id="wallet-modal-receive-title" style="color:white; margin-left: 15px;"><span name = "wallet-addresses-receive"></span></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body wallet-modal-receive-body">
+							<div class="table-div">
+								<div class="row" style="margin-bottom:15px">
+									<div class="col-8 col-lg-9 col-xl-10">
+										<input id="wallet-modal-receive-input-search" onkeyup="searchWalletAddress(event, 'wallet-modal-receive-pagination-list', 'wallet-modal-receive-div-table-scroll', 3, 'wallet-modal-receive-pagination-lquo-button', 'wallet-modal-receive-pagination-rquo-button', 'wallet-modal-receive-pagination-current-page-number', 'wallet-modal-receive-pagination-last-page-number', 'wallet-modal-receive-pagination-info')" class="form-control" type="text"></input>
+									</div>
+									<div class="col-4 col-lg-3 col-xl-2">
+										<button id="wallet-modal-receive-button-generate" type="button" class="btn pull-right wallet-generate-address-btn" data-toggle="modal" data-target="wallet-modal-generate-address"></button>
+									</div>
+								</div>
+								<div class="wallet-div-table-scroll" name="wallet-address-div-table-scroll" id="wallet-modal-receive-div-table-scroll">
+									<div class="wallet-table-fit">
+										<table name="wallet-address-types" id="wallet-modal-receive-table" class="table wallet-modal-table-layout">
+											<thead>
+												<tr>
+													<th id="wallet-modal-receive-table-head-address"></th>
+													<th id="wallet-modal-receive-table-head-description"></th>
+													<th id="wallet-modal-receive-table-head-options"></th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div name="wallet-address-pagination-info" id="wallet-modal-receive-pagination-info" class="col-4" style="margin-top:auto; margin-bottom:auto">
+										<strong>
+											<a id="wallet-modal-receive-pagination-current-page-text"></a>
+											<a id="wallet-modal-receive-pagination-current-page-number">0 </a>
+											<a id="wallet-modal-receive-pagination-last-page-text"></a>
+											<a id="wallet-modal-receive-pagination-last-page-number">0 </a>
+										</strong>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer wallet-modal-receive-footer">
+							<button id="wallet-modal-receive-button-close" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--Wallet modal generate address-->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="wallet-modal-generate-address">
+				<div class="modal-dialog">
+					<div class="modal-content" id="wallet-modal-generate-address-content" name="wallet-modal-content-generate-address" style="background-color: rgba(0,0,0,0.9);">
+						<div class="modal-header wallet-modal-header">
+							<img id="wallet-modal-generate-address-image" width="50" height="50">
+							<h4 class="modal-title" id="wallet-modal-generate-address-title" style="color:white; margin-left: 15px;"></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body wallet-modal-body">
+							<div class="form-group row" id="wallet-modal-generate-address-description-container">
+								<label id="wallet-modal-generate-address-label-description" class="col-3 col-form-label white-text"></label>
+								<div class="col-9">
+									<textarea id="wallet-modal-generate-address-textarea-description" style="resize: none;" class="form-control" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer wallet-btn-footer">
+							<button id="wallet-modal-generate-address-button-generate" type="button" class="btn wallet-generate-address-btn" data-dismiss="modal" onclick="generateAddress()">Generate</button>
+							<button id="wallet-modal-generate-address-button-close" type="button" class="btn btn-modal btn-danger" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Add address -->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="wallet-modal-add-contact-address">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="wallet-modal-add-contact-address-content">
+						<div class="modal-header">
+							<img id="wallet-modal-add-contact-image" width="50" height="50">
+							<h4 id="wallet-modal-add-contact-title" style="color:white; margin-left: 15px;">
+								<span id="wallet-modal-add-contact-address-generate-address"></span>
+							</h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<div class="table-div wallet-table-div">
+								<div class="form-group row wallet-search-container" id="wallet-modal-add-contact-search_container">
+									<div class="col-sm-5 wallet-container-name">
+										<label id="wallet-modal-contacts-search-name-label" class="col-sm-1 col-form-label search-title" style="color:white"></label>																																											
+										<input id="wallet-modal-contacts-search-name-input" type="text" onkeyup="searchName('wallet-modal-contact-table','wallet-modal-contacts-search-name-input', 'wallet-modal-contacts-search-address-input','wallet-pagination-list', 'wallet-div-table-scroll', 3, 'wallet-pagination-lquo-button', 'wallet-pagination-rquo-button', 'wallet-pagination-current-page-number', 'wallet-pagination-last-page-number', 'wallet-pagination-info')" class="form-control">
+									</div>
+									<div class="col-sm-5 wallet-container-address">
+										<label id="wallet-modal-contacts-search-address-label" class="col-sm-1 col-form-label search-title" style="color:white"></label>
+										<input id="wallet-modal-contacts-search-address-input" type="text" onkeyup="searchAddress('wallet-modal-contact-table', 'wallet-modal-contacts-search-address-input', 'wallet-modal-contacts-search-name-input', 'wallet-pagination-list', 'wallet-div-table-scroll', 3, 'wallet-pagination-lquo-button', 'wallet-pagination-rquo-button', 'wallet-pagination-current-page-number', 'wallet-pagination-last-page-number', 'wallet-pagination-info', 1)" class="form-control">
+									</div>
+								</div>
+								<div class="table-responsive-sm">
+									<div class="wallet-div-table-scroll contact-div-table-scroll" id="wallet-div-table-scroll">
+										<div class="wallet-table-fit">
+											<table id="wallet-modal-contact-table" class="table table-day-style">
+												<thead style="white-space:nowrap">
+													<tr>
+														<th onclick="sortTable(0, 'wallet-modal-contact-table', 'wallet-pagination-lquo-button', 'wallet-pagination-list', 3)" style="width: 30%" id="wallet-modal-table-name-header"></th>
+														<th onclick="sortTable(1, 'wallet-modal-contact-table', 'wallet-pagination-lquo-button', 'wallet-pagination-list', 3)" style="width: 30%" id="wallet-modal-table-address-header"></th>
+														<th onclick="sortTable(2, 'wallet-modal-contact-table', 'wallet-pagination-lquo-button', 'wallet-pagination-list', 3)" style="width: 12%" id="wallet-modal-table-coin_type-header"></th>
+														<th style="width: 10%" id="wallet-modal-table-options-header"></th>
+													</tr>
+													<tbody>
+													</tbody>
+												</thead>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>			
+							<div class="row" style="width: 90%; margin:auto">
+								<div id="wallet-pagination-info" class="col-4" style="margin-top:auto; margin-bottom:auto">
+									<strong>
+										<a id="wallet-pagination-current-page-number-text"></a>
+										<a id="wallet-pagination-current-page-number">0</a>
+										<a id="wallet-pagination-last-page-number-text"></a>
+										<a id="wallet-pagination-last-page-number">0</a>
+									</strong>
+								</div>
+							</div>								
+						</div>
+						<div class="modal-footer">
+							<button id="wallet-modal-add-contacts-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="contacts" class="page hide contact-page contact-page-day" data-page="contacts">
+			<div class="table-div contact-table-div" id="contact-table-div">
+				<div class="form-group row wallet-search-container" id="contacts-div-search-container">
+					<div class="col-sm-5 contacts-container-name">
+						<label id="contacts-search-name-label" class="col-sm-1 col-form-label search-title" style="color:white"></label>	
+						<input id="contacts-search-name-input" type="text" onkeyup="searchName('contact-table', 'contacts-search-name-input', 'contacts-search-address-input', 'Contacts-pagination-list', 'contact-div-table-scroll', 6, 'Contacts-pagination-lquo-button', 'Contacts-pagination-rquo-button', 'contacts-pagination-current-page-number', 'contacts-pagination-last-page-number', 'contacts-pagination-info')" class="form-control">
+					</div>
+					<div class="col-sm-5 contacts-container-address">
+						<label id="contacts-search-address-label" class="col-sm-1 col-form-label search-title" style="color:white"></label>
+						<input id="contacts-search-address-input" type="text" onkeyup="searchAddress('contact-table', 'contacts-search-address-input', 'contacts-search-name-input',  'Contacts-pagination-list', 'contact-div-table-scroll', 6, 'Contacts-pagination-lquo-button', 'Contacts-pagination-rquo-button', 'contacts-pagination-current-page-number', 'contacts-pagination-last-page-number', 'contacts-pagination-info', 1)" class="form-control">
+					</div>
+				</div>
+				<div class="contact-div-table-scroll" id="contact-div-table-scroll">
+					<table id="contact-table" class="table table-night table-contact-layout">
+					  	<thead>
+							<tr>
+								<th onclick="sortTable(0, 'contact-table', 'contact-pagination-lquo-button', 'contact-pagination-list', 6)" id="table-name-header"></th>
+								<th onclick="sortTable(1, 'contact-table', 'contact-pagination-lquo-button', 'contact-pagination-list', 6)" id="table-address-header"></th>
+								<th onclick="sortTable(2, 'contact-table', 'contact-pagination-lquo-button', 'contact-pagination-list', 6)" id="table-coin_type-header"></th>
+								<th id="table-options-header"></th>     
+							</tr>
+						</thead>
+					  	<tbody></tbody>
+					</table>
+				</div>
+				<div style="width: calc(100% + 30px); display:flex" id="contacts-footer" class="row">
+					<div id="contacts-pagination-info" class="contacts-pagination-info col-4" style="margin-top:auto;margin-bottom:auto;">
+						<strong>
+						<a id="contacts-pagination-current-page-number-text"></a>
+						<a id="contacts-pagination-current-page-number">0</a>
+						<a id="contacts-pagination-last-page-number-text"></a>
+						<a id="contacts-pagination-last-page-number">0</a>
+						</strong>
+					</div>
+					<div class="col-4">
+						<button id="table-add-btn" type="button" onclick="addContactTutorial()" data-toggle="modal" data-target="#add-contact-modal" class="btn btn-success pull-right"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+			<!-- Modal add contacts -->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="add-contact-modal">
+				<div class="modal-dialog">
+					<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="add-contact-modal-content">
+						<div class="modal-header">
+							<h4 id="add-contacts-modal-tittle" class="modal-title" style="color:white; margin-left: 15px;"></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body" id="add-contact-modal-content">
+							<div class="form-group row" id="add-contact-modal-name-container">
+								<label id="add-contacts-modal-name-label" style="color:white;" class="col-3 col-form-label"></label>
+								<div class="col-9">
+									<input id="add-contacts-modal-name-input" maxlength="40" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group row" id="add-contact-modal-address-container">
+								<label id="add-contacts-modal-address-label" style="color:white;" class="col-3 col-form-label"></label>
+								<div class="col-9">
+									<input id="add-contacts-modal-address-input" maxlength="50" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group row" id="add-contact-modal-coin-container">
+								<label id="add-contacts-modal-coin_type-label" class="col-3 col-form-label" style="color:white;"></label>
+								<select name="cmbCoins" class="col-4 form-control" style="margin-left:15px;" id="add-contacts-modal-coin-select">
+								</select>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="add-contacts-modal-add-btn" type="button" class="btn btn-success" data-dismiss="modal" onclick="addContact()"></button>
+							<button id="add-contacts-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal edit contacts -->
+			<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="edit-contact-modal">
+				<div class="modal-dialog">
+					<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="edit-contact-modal-content">
+						<div class="modal-header">
+							<h4 id="edit-contacts-modal-tittle" class="modal-title" style="color:white; margin-left: 15px;"></h4>
+							<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body" id="edit-contact-modal-content">
+							<div class="form-group row">
+								<label id="edit-contacts-modal-name-label" style="color:white;" class="col-3 col-form-label"></label>
+								<div class="col-9">
+									<input id="edit-contacts-modal-name-input" maxlength="40" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label id="edit-contacts-modal-address-label" style="color:white;" class="col-3 col-form-label"></label>
+								<div class="col-9">
+									<input id="edit-contacts-modal-address-input" maxlength="35" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label id="edit-contacts-modal-coin_type-label" class="col-3 col-form-label" style="color:white;"></label>
+								<select name="cmbCoins" class="col-4 form-control" style="margin-left:15px;" id="edit-contacts-modal-coin-select">
+								</select>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button id="edit-contacts-modal-edit-btn" type="button" class="btn btn-warning" style="color: white;" data-dismiss="modal" onclick="editContact(this)"></button>
+							<button id="edit-contacts-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<div id="transactions" class="page hide transaction-page transaction-page-day" data-page="transactions">
+			<div class="transaction-table-div">
+				<div class="form-group row align-items-end">
+					<div class="col-10">
+						<label id="transactions-label-address" class="col-form-label"></label>
+						<input id="transactions-input-address" onkeyup="searchAddress('transaction-table', 'transactions-input-address', '', 'Transaction-pagination-list', 'transaction-div-table', 3, 'Transaction-pagination-lquo-button', 'Transaction-pagination-rquo-button', 'transaction-pagination-current-page-number', 'transaction-pagination-last-page-number', 'transaction-pagination-info', 0)" type="text" class="form-control">
+					</div>
+					<div class="col-2">
+						<button class="btn btn-info pull-right" id="transactions-advanced-filter-btn" data-toggle="modal" data-target="#advanced-filter-modal" onclick="advancedFilters('transaction-table', 'transactions')">
+							<span>
+								<i class="fa fa-filter"></i>
+							</span>
+							<span id="transaction-button-filters"></span>
+						</button>
+					</div>
+				</div>
+				<div class="transaction-div-table-scroll" id="transaction-div-table">
+					<table id="transaction-table" class="table table-night table-transaction">
+					<thead>
+						<tr id="transaction-table-header">
+							<th onclick = "sortTable(0, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-address"></th>
+							<th onclick = "sortTable(1, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-coin"></th>
+							<th onclick = "sortTable(2, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-quantity"></th>
+							<th onclick = "sortTable(3, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-type"></th>	
+							<th onclick = "sortTable(4, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-date"></th>
+							<th onclick = "sortTable(5, 'transaction-table', 'Transaction-pagination-lquo-button', 'Transaction-pagination-list', (Math.ceil(screen.height / 100) - 2))" id="transaction-table-label-hour"></th>
+						</tr>
+					</thead>	
+					<tbody id="transaction-table-body"></tbody>	
+					</table>
+				</div>
+				<div style="display:flex; width:100%; margin-left: auto; margin-right:auto;" id="transactions-footer" class="row">
+					<div id="transaction-pagination-info" style="margin-top: auto; margin-bottom: auto;padding-left:0px !important" class="col-4">
+						<strong>
+							<a id="transaction-pagination-current-page-number-text"></a>
+							<a id="transaction-pagination-current-page-number">0</a>
+							<a id="transaction-pagination-last-page-number-text"></a>
+							<a id="transaction-pagination-last-page-number">0</a>		
+						</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="settings" class="page hide" data-page="settings">
+			<div class="settings-container">
+				<div class="row">
+					<fieldset id="settings-system-setting-container" class="col-6">
+						<legend id="settings-system-setting-title"></legend>
+						<div class="system-setting-container">
+							<label id="setting-label-language" class="col-form-label" style="font-weight:bold"></label>
+							<!--div class="setting-row"-->
+								<select id="select-language" class="settings-select form-control" onchange="changeLanguage()">
+									<option value="english">English</option>
+									<option value="spanish">Spanish</option>
+								</select>
+							<!--/div-->
+							<label id="setting-label-mode" class="col-form-label" style="font-weight:bold"></label>
+							<!--div class="setting-row"-->
+								<select id="select-mode" class="settings-select form-control" onchange="changeMode()">
+									<option value="night">Night</option>
+									<option value="day">Day</option>
+								</select>
+							<!--/div-->
+							<label id="setting-label-update" class="col-form-label" style="font-weight:bold">Update Cypher: </label>
+							<div class="setting-row">
+								<button id="setting-update-button" class="settings-select form-control btn btn-success" onclick="updateCypher()">Update</button>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset id="settings-system-setting-container" class="col-6">
+						<legend id="settings-wallet-setting-title"></legend>
+						<div class="row">
+							<div class="col-6">
+								<label id="settings-label-edit-wallet" class="col-form-label" style="font-weight: bold"> </label> <br>
+								<button id="settings-edit_wallet-button" class="btn btn-secondary settings-btn" onclick="editWallet()">
+									<i class="fa fa-pencil"></i>
+								</button>
+							</div>
+							<div class="col-6">
+								<label id="settings-label-backup-wallet" class="col-form-label" style="font-weight: bold"> </label> <br>
+								<button id="settings-backup-wallet-button" class="btn btn-secondary settings-btn" onclick="backupWallet()">
+									<i class="fa fa-save"></i>
+								</button>
+							</div>
+						</div>
+						<div>
+							<label id="settings-label-show-tutorial" class="col-form-label" style="font-weight: bold"> </label> <br>
+							<button id="settings-enable_tutorial-button" class="btn btn-secondary settings-btn" data-page="portfolio" onclick="enableTutorial()">
+								<i class="fa fa-desktop"></i>
+							</button>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+
+		<div id="help" class="page hide" data-page="help">
+				
+			<div id="accordion" class="help helpNow">
+				<div class="card theme" id="cards1">
+					<div id="cardHead1" class="card-header" data-toggle="collapse" href="#collapseOne">
+						<p class="card-link" id="help_q1"></p>
+					</div>
+					<div id="collapseOne" class="collapse show" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a1"></p>
+							<button id="mailSender" class="mailSender mail" onclick="window.location.href = 'mailto:mail@example.org'"></button>			
+						</div>
+					</div>	
+				</div>
+				<div class="card theme" id="cards2">
+					<div id="cardHead2" class="card-header" data-toggle="collapse" href="#collapseTwo">
+						<p class="card-link" id="help_q2"></p>
+					</div>
+					<div id="collapseTwo" class="collapse" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a2.1"></p> <br>
+							<h6><strong id="help_a2.2"></strong></h6>
+							<p id="help_a2.3"></p> <br> 
+							<h6><strong id="help_a2.4"></strong></h6>
+							<p id="help_a2.5"></p> <br>
+							<h6><strong id="help_a2.6"></strong></h6>
+							<p id="help_a2.7"></p>
+						</div>
+					</div>
+				</div>
+				<div class="card theme" id="cards3">
+					<div id="cardHead3" class="card-header" href="#collapseThree" data-toggle="collapse">
+						<p class="card-link" id="help_q3"></p>
+					</div>
+					<div id="collapseThree" class="collapse" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a3"></p> 
+						</div>
+					</div>
+				</div>
+				<div class="card theme" id="cards4">
+					<div id="cardHead4" class="card-header" data-toggle="collapse" href="#collapseFour">
+						<p class="card-link" id="help_q4"></p>
+					</div>
+					<div id="collapseFour" class="collapse" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a4"></p>						
+						</div>		
+					</div>
+				</div>
+				<div class="card theme" id="cards5">
+					<div id="cardHead5" class="card-header" data-toggle="collapse" href="#collapseFive">
+						<p class="card-link" id="help_q5"></p>
+					</div>
+					<div id="collapseFive" class="collapse" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a5"></p>						
+						</div>		
+					</div>
+				</div>
+				<div class="card theme" id="cards6">
+					<div id="cardHead6" class="card-header" data-toggle="collapse" href="#collapseSix">
+						<p class="card-link" id="help_q6"></p>
+					</div>
+					<div id="collapseSix" class="collapse" data-parent="#accordion">
+						<div class="card-body">
+							<p id="help_a6"></p>						
+						</div>		
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Success modal with timeout -->
+		<div class="modal fade contact-modal-added-style" id="contact-modal-added" role="dialog">
+			<div class="modal-dialog modal-sm modal-dialog-centered">
+			  <div class="modal-content">
+				<div class="modal-header success-header header" id="modal-success-header">
+					<p>
+					  <span>
+						<i class="fa fa-check" id="modal-success-span"></i>
+					  </span>
+					  <span id="add-header-info"></span>
+					</p>
+					<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body body" id="add-contact-modal-alert-body">
+				  <p id="contact-modal-added-message"></p>
+				</div>
+				<div class="modal-footer footer" id="add-contact-modal-alert-footer">
+				</div>
+			  </div>
+			</div>
+		</div>
+		
+		<!--Modal for errors-->
+		<div class="modal fade contact-modal-added-style" id="modal-message-error" role="dialog">
+			<div class="modal-dialog modal-sm modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header error-header header" id="modal-error-header">
+						<p>
+							<span>
+								<i class="fa fa-warning" style="color:white"></i>
+							</span>
+							<span id="modal-error-header-info" style="color:white; font-size:20px;">Error!</span>
+						</p>
+					</div>
+					<div class="modal-body" id="modal-error-body">
+						<p id="modal-error-body-info"></p>
+					</div>
+					<div class="modal-footer footer" id="modal-error-footer">
+						<button id="modal-btn-error" data-dismiss="modal" class="btn btn-danger">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--QR Modal-->
+		<div class="modal fade" id="modal-QR" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content" id="QR-modal-content">
+					<div class="modal-header header" id="modal-QR-header">
+						<p>
+							<span>
+								<i class="fa fa-qrcode"></i>
+							</span>
+							<span id="modal-QR-header-info" style="color:white; font-size:20px;"></span>
+						</p>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body" id="modal-QR-body" style="display:flex">
+						<div id="QR-image" style="margin:auto">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--Modal for warnings-->
+		<div class="modal fade contact-modal-added-style" id="modal-message-warning" role="dialog">
+			<div class="modal-dialog modal-sm modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header warning-header header" id="modal-warning-header">
+						<p>
+							<span>
+								<i class="fa fa-warning" style="color:white"></i>
+							</span>
+							<span id="modal-warning-header-info"></span>
+						</p>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body" id="modal-warning-body">
+						<p id="modal-warning-body-info"></p>
+					</div>
+					<div class="modal-footer footer" id="modal-warning-footer">
+						<button id="modal-btn-warning-yes" data-dismiss="modal" class="btn btn-warning"></button>
+						<button id="modal-btn-warning-no" data-dismiss="modal" class="btn btn-secondary"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Message modal delete contact -->
+		<div class="modal fade" id="contact-modal-deleted" role="dialog">
+			<div class="modal-dialog modal-sm  modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header error-header header">
+						<p>
+						<span>
+							<i class="fa fa-trash"></i>
+						</span>
+						<span id="delete-header-info"></span>
+						</p>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body body" id="delete-contact-modal-alert-body">
+						<p id="contact-modal-delete-message"></p>
+					</div>
+					<div class="modal-footer footer modal-footer-day" id="delete-contact-modal-alert-footer">
+						<button class="btn btn-danger" data-dismiss="modal" id="btn-delete-contact-confirm"></button> 
+						<button class="btn btn-secondary" data-dismiss="modal" id="btn-delete-contact-dismiss"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Advanced Filter Modal -->
+		<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="advanced-filter-modal">
+			<div class="modal-dialog">
+				<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="advanced-filter-modal-content">
+					<div class="modal-header">
+						<h4 id="advanced-filter-modal-title" class="modal-title" style="color:white; margin-left: 15px;">
+							<span>
+								<i class="fa fa-search"></i>
+							</span>
+							<span id="advanced-filter-modal-title-text"></span>
+						</h4>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body advanced-filter-modal-body" id="advanced-filter-modal-body">
+						<div class="form-group row" id="advanced-filter-modal-coin_type-container">
+							<label id="advanced-filter-modal-coinType-label" class="col-3 col-form-label" style="color:white;"></label>
+							<select name="cmbCoins" class="col-6 form-control" style="margin-left:15px;" id="advanced-filter-modal-coinType-select">
+								<option value="none" id="select_coin"></option>
+							</select>
+						</div>
+						<div class="form-group row" id="advanced-filter-modal-year-container">
+							<label id="advanced-filter-modal-year-label" class="col-3 col-form-label" style="color:white;"></label>
+							<input class="form-control col-4" type="number" id="advanced-filter-modal-year-input" min="2000" max="2025" placeholder="2000" style="margin-left:15px;">
+						</div>
+						<div class="form-group row" id="advanced-filter-modal-month-container">
+							<label id="advanced-filter-modal-month-label" class="col-3 col-form-label" style="color:white;"></label>
+							<input type="month" class="form-control col-5" id="advanced-filter-modal-month-input" style="margin-left:15px;">
+						</div>
+						<div class="form-group row" id="advanced-filter-modal-date-container">
+							<label id="advanced-filter-modal-day-label" class="col-3 col-form-label" style="color:white;"></label>
+							<input type="date" class="form-control col-4" id="advanced-filter-modal-day-input" style="margin-left:15px;">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="advanced-filter-modal-clear-btn" type="button" class="btn btn-modal btn-info"></button>
+						<button id="advanced-filter-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--ADD WALLET-->
+		<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="add-wallet-modal">
+			<div class="modal-dialog">
+				<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="add-wallet-modal-content">
+					<div class="modal-header">
+						<h4 id="add-wallet-modal-title" class="modal-title" style="color:white; margin-left: 15px;"></h4>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body" id="add-wallet-modal-body">
+						<div class="form-group row" id="add-contact-modal-name-container">
+							<label id="add-wallet-modal-name-label" style="color:white;" class="col-3 col-form-label"></label>
+							<div class="col-9">
+								<input id="add-wallet-modal-name-input" maxlength="40" class="form-control" type="text">
+							</div>
+						</div>
+						<div class="form-group row" id="add-contact-modal-address-container">
+							<label id="add-wallet-modal-description-label" style="color:white;" class="col-3 col-form-label"></label>
+							<div class="col-9">
+								<textarea id="add-wallet-modal-description-textarea" cols="30" rows="5" class="form-control"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="add-wallet-modal-add-btn" type="button" class="btn btn-success" onclick="addWallet()"></button>
+						<button id="add-wallet-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--EDIT WALLET-->
+		<div class="modal fade" style="background-color: rgba(0,0,0,0.2);" id="edit-wallet-modal">
+			<div class="modal-dialog">
+				<div class="modal-content" style="background-color: rgba(0,0,0,0.9);" id="edit-wallet-modal-content">
+					<div class="modal-header">
+						<h4 id="edit-wallet-modal-title" class="modal-title" style="color:white; margin-left: 15px;"></h4>
+						<button type="button" style="color:white;" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body" id="add-wallet-modal-body">
+						<div class="form-group row" id="add-contact-modal-name-container">
+							<label id="edit-wallet-modal-name-label" style="color:white;" class="col-3 col-form-label"></label>
+							<div class="col-9">
+								<input id="edit-wallet-modal-name-input" maxlength="40" class="form-control" type="text">
+							</div>
+						</div>
+						<div class="form-group row" id="add-contact-modal-address-container">
+							<label id="edit-wallet-modal-description-label" style="color:white;" class="col-3 col-form-label"></label>
+							<div class="col-9">
+								<textarea id="edit-wallet-modal-description-textarea" cols="30" rows="5" class="form-control"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="edit-wallet-modal-add-btn" type="button" class="btn btn-success"></button>
+						<button id="edit-wallet-modal-close-btn" type="button" class="btn btn-modal btn-danger" data-dismiss="modal"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--Loading Modal-->
+		<div class="modal fade" data-backdrop="static" data-keyboard="false" style="background-color: rgba(0,0,0,0.8);" id="loading-modal">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content" style="background-color: transparent" id="loading-modal-content">
+					<div class="modal-body" id="loading-modal-content">
+						<div class="loader-content">
+							<div class="loader"></div>
+							<div class="loader-text">
+								<p style="color: white" id="loading-message">Please wait...</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="js/index.js"></script>
+	<script>
+		/*var slider = document.getElementById("wallet-modal-range-fee");
+		var output = document.getElementById("fee-value");
+		output.innerHTML = slider.value;
+		slider.oninput = function() {
+			output.innerHTML = this.value;
+		}*/
+	</script>
+</body>
+</html>

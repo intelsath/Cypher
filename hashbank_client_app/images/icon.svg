@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 960 560" style="enable-background:new 0 0 960 560;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#XMLID_9_);}
+	.st1{fill:url(#XMLID_10_);}
+	.st2{fill:url(#XMLID_11_);}
+	.st3{fill:url(#XMLID_12_);}
+</style>
+<g id="XMLID_2_">
+	<linearGradient id="XMLID_9_" gradientUnits="userSpaceOnUse" x1="492.653" y1="505.6725" x2="492.653" y2="97.3937">
+		<stop  offset="0" style="stop-color:#1485E2"/>
+		<stop  offset="1" style="stop-color:#28C4E8"/>
+	</linearGradient>
+	<polygon id="XMLID_8_" class="st0" points="381.6,230.3 407.1,246.2 407.1,387.4 425.4,393.5 425.4,257.5 491.2,298.3 492,298.9 
+		554.4,260.5 554.4,388.5 572.6,382.4 572.6,249.3 603.7,230.2 603.7,355.8 622,349.7 622,197.5 492,277.4 363.3,197.5 363.3,354.7 
+		381.6,360.8 	"/>
+	<linearGradient id="XMLID_10_" gradientUnits="userSpaceOnUse" x1="416.2753" y1="505.6725" x2="416.2753" y2="97.3943">
+		<stop  offset="0" style="stop-color:#1485E2"/>
+		<stop  offset="1" style="stop-color:#28C4E8"/>
+	</linearGradient>
+	<polygon id="XMLID_7_" class="st1" points="425.4,153.8 407.1,159.9 407.1,210.4 425.4,210.4 	"/>
+	<linearGradient id="XMLID_11_" gradientUnits="userSpaceOnUse" x1="563.5034" y1="505.6725" x2="563.5034" y2="97.3943">
+		<stop  offset="0" style="stop-color:#1485E2"/>
+		<stop  offset="1" style="stop-color:#28C4E8"/>
+	</linearGradient>
+	<polygon id="XMLID_6_" class="st2" points="572.6,159.9 554.4,153.8 554.4,210.4 572.6,210.4 	"/>
+	<linearGradient id="XMLID_12_" gradientUnits="userSpaceOnUse" x1="492.6582" y1="505.6725" x2="492.6582" y2="97.3944">
+		<stop  offset="0" style="stop-color:#1485E2"/>
+		<stop  offset="1" style="stop-color:#28C4E8"/>
+	</linearGradient>
+	<path id="XMLID_3_" class="st3" d="M493.5,52.3l-0.8-0.5L301.3,162.3l-0.8,0.5v221.9L491.9,495l0.8,0.5L684,385l0.8-0.5V162.7
+		L493.5,52.3z M666.5,173.3V374L492.7,474.4L318.8,374V173.3L492.7,72.9L666.5,173.3z"/>
+</g>
+</svg>

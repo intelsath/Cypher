@@ -1,0 +1,31 @@
+{
+  "name": "megahash",
+  "version": "1.0.0",
+  "description": "Megahash desktop app",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron main.js",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  },
+  "author": "Oscar Gabriel Ordoñez Santos",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "chart.js": "^2.7.2",
+    "crc-32": "^1.2.0",
+    "jquery": "^3.3.1",
+    "jquery-confirm": "^3.3.2",
+    "ngx-qrcode2": "0.0.9",
+    "qrcode-generator": "^1.4.0",
+    "ripple-lib": "^0.19.1",
+    "serialport": "^6.2.0",
+    "showcaser": "^1.0.0",
+    "sqlite3": "^4.0.0",
+    "web3": "1.0.0-beta.33"
+  },
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-rebuild": "^1.7.3",
+    "electron-tooltip": "^1.1.5"
+  }
+}
