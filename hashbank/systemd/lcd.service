@@ -1,0 +1,11 @@
+[Unit]
+Description=LCD
+
+[Service]
+WorkingDirectory=/home/debian/hashbank/LCD
+ExecStart=/home/debian/hashbank/LCD/LCD
+Restart=always # or always, on-abort, etc
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

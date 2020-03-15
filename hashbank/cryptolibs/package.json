@@ -1,0 +1,33 @@
+{
+  "name": "hashbank",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "args": "^5.0.0",
+    "bip39": "^2.5.0",
+    "bitcoin-transaction": "^1.1.0",
+    "bitcoincashjs": "^0.1.10",
+    "bitcoinjs-lib": "^3.3.2",
+    "blockchain.info": "^2.12.1",
+    "body-parser": "~1.18.2",
+    "coinselect": "^3.1.11",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ethereumjs-tx": "^1.3.4",
+    "ethereumjs-util": "^5.1.5",
+    "ethereumjs-wallet": "^0.6.0",
+    "express": "~4.15.5",
+    "hbs": "~4.0.1",
+    "jsonschema": "^1.2.2",
+    "less-middleware": "~2.2.1",
+    "litecore-lib": "^0.13.22",
+    "morgan": "~1.9.0",
+    "request": "^2.83.0",
+    "ripple-bip32": "^0.0.3",
+    "ripple-lib": "^1.0.0",
+    "serialport": "^6.1.1",
+    "serve-favicon": "~2.4.5",
+    "sqlite3": "^4.0.2"
+  }
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=UART
+
+[Service]
+WorkingDirectory=/home/debian/hashbank/UART
+ExecStart=/home/debian/hashbank/UART/UART
+Restart=always # or always, on-abort, etc
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
