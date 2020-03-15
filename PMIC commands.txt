@@ -1,0 +1,55 @@
+Startup settings
+-----------------
+i2c dev 0
+
+*Interrupt settings
+Address 0x02, reset 0x80 (all interrups on)
+
+(all interrupts off)
+- uboot
+i2c mw 0x24 0x02.2 0xf0
+- userspace
+sudo i2cset -f -y 0 0x24 0x02 0xf0
+
+*Charger config 2 
+Address 0x05, reset 0x80
+
+(Set Charge voltage 4.2V)
+- uboot
+i2c mw 0x24 0x05.2 0xa0
+- userspace
+sudo i2cset -f -y 0 0x24 0x05 0xa0
+
+* Status
+Address: 0x0A, reset: 0x00
+
+(Set sleep mode instead of OFF on turn off)
+- uboot
+i2c mw 0x24 0x0a.2 0x0s (s is status, read only)
+- userspace
+sudo i2cset -f -y 0 0x24 0x0a 0x0s (s is status, read only)
+
+* Sequence 2(Power off LDO1 on sleepmode)
+Address: 0x1a, reset: 0x5f, password: 0x67
+
+- uboot
+i2c mw 0x24 0x0b.2 0x67
+i2c mw 0x24 0x1a.2 0x51
+
+
+
+Read MUX
+---------
+Address: 0x09, reset: 0x00 (High-Z)
+
+Default (no se lee nada)
+sudo i2cset -f -y 0 0x24 0x09 0x00
+
+Para medir la batería
+sudo i2cset -f -y 0 0x24 0x09 0x01
+cat /sys/bus/iio/devices/iio\:device0/in_voltage7_raw
+4.02V = 3057
+
+Para medir Vsys
+sudo i2cset -f -y 0 0x24 0x09 0x02
+cat /sys/bus/iio/devices/iio\:device0/in_voltage7_raw

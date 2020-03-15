@@ -1,0 +1,14 @@
+Reubild kernel
+./tools/rebuild.sh
+
+Watch sync progress
+watch grep -e Dirty: -e Writeback: /proc/meminfo
+
+touch everything
+find  -type f  -exec touch {} +
+
+SPI bufsiz addres
+
+/sys/module/spidev/parameters/bufsiz
+
+sudo echo pwm > /sys/bus/platform/devices/ocp:P1_36_pinmux/state
