@@ -10,7 +10,7 @@
   "author": "Oscar Gabriel Ordoñez Santos",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "chart.js": "^2.7.2",
     "crc-32": "^1.2.0",
     "jquery": "^3.3.1",
