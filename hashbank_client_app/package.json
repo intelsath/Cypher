@@ -24,7 +24,7 @@
     "web3": "1.0.0-beta.33"
   },
   "devDependencies": {
-    "electron": "^1.8.4",
+    "electron": "^7.2.4",
     "electron-rebuild": "^1.7.3",
     "electron-tooltip": "^1.1.5"
   }
