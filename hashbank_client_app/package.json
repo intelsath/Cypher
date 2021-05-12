@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.0.0",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.9.4",
     "crc-32": "^1.2.0",
     "jquery": "^3.3.1",
     "jquery-confirm": "^3.3.2",
